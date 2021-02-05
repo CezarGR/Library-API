@@ -19,19 +19,19 @@ class Register extends Controller
 
     public function register(Request $request)
     {
-        $emailValido = Book::where('author', $request->author)->first();
+        $emailValido = User::where('email', $request->email)->first();
         
 
         if(!$emailValido){
-            $userNew = Book::create($request->all());
+            $userNew = User::create($request->all());
             return response()->json([
-                'message' => 'Book successfully created',
+                'message' => 'User successfully created',
                 'user new' => $userNew
             ]);
         }
         else{
             return response()->json([
-                'message' => 'Existing author',
+                'message' => 'Existing user',
             ], 401);  
         }
 
