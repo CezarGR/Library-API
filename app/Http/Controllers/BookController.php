@@ -41,12 +41,30 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $book = Book::create($request->all());
 
-        return response()->json([
-            'message' => 'Book successfully created',
-            'book' => $book
+        $this->validate($request, [
+            'title'=> 'required|min:1',
+            'author'=> 'required|min:1',
+            'genre'=> 'required|min:1'
         ]);
+
+        $bookTitle = Book::where('title', $request->title)->first(); // se nao achar false 
+        $bookAuthor = Book::where('author', $request->author)->first(); // se nao achar false 
+
+        if($bookTitle && $bookAuthor){
+            return response()->json([
+                'message' => 'Book already created',
+            ], 401);
+        }else{
+           $book = Book::create($request->all());
+            return response()->json([
+                'message' => 'Book successfully created',
+                'book' => $book
+            ]);
+        }
+        
+        
+        
             
     }
 

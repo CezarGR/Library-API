@@ -21,8 +21,13 @@ $router->get('/', function () use ($router) {
 });
 
 $router->post('/register','Register@register');
+//$router->get('/register/{id}','Register@profile');
+$router->group(['prefix'=>'/register', 'middleware' => 'checktoken'], function($router){
+    $router->get('/{id}', 'Register@profile');
+});
+$router->post('/login', 'LoginController@login');
 
-$router->group(['prefix'=>'/book'], function($router){
+$router->group(['prefix'=>'/book', 'middleware' => 'checktoken'], function($router){
     $router->get('/', 'BookController@index');
     $router->get('/{id}', 'BookController@show');
     $router->post('/', 'BookController@store');
@@ -30,3 +35,6 @@ $router->group(['prefix'=>'/book'], function($router){
     $router->delete('/{id}', 'BookController@destroy'); 
 });
 
+$router->group(['prefix' => '/recover'], function($router){
+    $router->post('/', 'RecoverPasswordController@recover');
+});
